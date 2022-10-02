@@ -2,7 +2,9 @@ package com.tcc.apitcc.servicios.serviciosimpl;
 
 
 import com.tcc.apitcc.entidades.Mercancia;
+import com.tcc.apitcc.entidades.Zona;
 import com.tcc.apitcc.repositorios.MercanciaRepositorio;
+import com.tcc.apitcc.repositorios.ZonaRepositorio;
 import com.tcc.apitcc.servicios.ServicioBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,9 @@ public class MercanciaServicioImpl implements ServicioBase<Mercancia> {
 
     @Autowired
     private MercanciaRepositorio mercanciaRepositorio;
+
+    @Autowired
+    private ZonaRepositorio zonaRepositorio;
 
     @Override
     @Transactional(readOnly = true)
@@ -47,9 +52,28 @@ public class MercanciaServicioImpl implements ServicioBase<Mercancia> {
     @Override
     @Transactional
     public Mercancia registrar(Mercancia entidad) throws Exception {
+
         try{
 
-           entidad = mercanciaRepositorio.save(entidad);
+
+            Integer idZona=(entidad.getZona().getId());
+            Optional<Zona> zonaBuscada=zonaRepositorio.findById(idZona);
+
+            double capacidadZona=(zonaBuscada.get().getMaximo());
+            double pesoMercancia=entidad.getPeso();
+
+            double diferenciaPesos=capacidadZona-pesoMercancia;
+
+            if(diferenciaPesos>0){
+                System.out.println("haciendolo");
+
+            }else{
+                throw new Exception("No hay capacidad");
+            }
+
+
+
+            //entidad = mercanciaRepositorio.save(entidad);
            return entidad;
 
         }catch(Exception errorServicio){
