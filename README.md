@@ -23,3 +23,13 @@
     }
 
 }
+
+
+***
+
+{
+    "nombre":"zona1",
+    "disponible":50,
+    "maximo":50
+
+}
